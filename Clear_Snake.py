@@ -3,17 +3,17 @@
 import pygame, random
 
 class Blocks():
-    def __init__(self, block_w=15, block_h=15):
+    def __init__(self, block_w=10, block_h=10):
         self.block_w = block_w
         self.block_h = block_h
         self.set_pos()
     def set_pos(self):
-        self.block_x = random.randint(0,50) * 15
-        self.block_y = random.randint(0,40) * 15
+        self.block_x = random.randint(0,24) * 20
+        self.block_y = random.randint(0,19) * 20
 
 
 class Main():
-    def __init__(self, x_pos=400, y_pos=280):
+    def __init__(self, x_pos=420, y_pos=300):
         self.x_pos, self.y_pos = x_pos, y_pos
         self.x_change = self.y_change = 0
         self.clock = pygame.time.Clock()
@@ -33,13 +33,13 @@ class Main():
                 try:
                     if event.type == pygame.KEYDOWN:
                         try:
-                            x_keys = {276: -15,
-                                        275: 15}
+                            x_keys = {276: -10,
+                                        275: 10}
                             self.x_change = x_keys[event.key]
                             self.y_change = 0
                         except:
-                            y_keys = {274: 15,
-                                        273: -15}
+                            y_keys = {274: 10,
+                                        273: -10}
                             self.y_change = y_keys[event.key]
                             self.x_change = 0
                 except:
@@ -47,11 +47,11 @@ class Main():
                     self.gameExit = True
 
                 """ DATA PROCESSING """
-            self.x_pos += self.x_change if abs(self.x_change) <= 15 else 15
-            self.y_pos += self.y_change if abs(self.y_change) <= 15 else 15
-            if abs(self.x_pos) <= 0 or abs(self.x_pos) >= 785:
+            self.x_pos += self.x_change if abs(self.x_change) <= 10 else 10
+            self.y_pos += self.y_change if abs(self.y_change) <= 10 else 10
+            if abs(self.x_pos) <= 0 or abs(self.x_pos) >= 750:
                 self.lose()
-            if abs(self.y_pos) <= 0 or abs(self.y_pos) >= 585:
+            if abs(self.y_pos) <= 0 or abs(self.y_pos) >= 600:
                 self.lose()
             self.display.fill(displayColour)
             """ CHEKING BLOCK'S STATUS """
@@ -62,11 +62,11 @@ class Main():
                     self.block_print()
             else:
                 self.block_print()
-            pygame.draw.rect(self.display, (0,0,0), [self.x_pos, self.y_pos, 15, 15])
+            pygame.draw.rect(self.display, (0,0,0), [self.x_pos, self.y_pos, 10, 10])
 
             pygame.display.update()
 
-            self.clock.tick(20)
+            self.clock.tick(10)
 
     def lose(self):
         print "YOU LOSE!"

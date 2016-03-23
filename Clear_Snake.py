@@ -2,7 +2,7 @@
 
 import pygame, random
 
-class Blocks():
+class Blocks:
     def __init__(self, block_w=10, block_h=10):
         self.block_w = block_w
         self.block_h = block_h
@@ -12,11 +12,12 @@ class Blocks():
         self.block_y = random.randint(0,19) * 20
 
 
-class Main():
-    def __init__(self, x_pos=420, y_pos=300):
+class Main:
+    def __init__(self, blocks_plus=0, x_pos=420, y_pos=300):
         self.x_pos, self.y_pos = x_pos, y_pos
         self.x_change = self.y_change = 0
         self.clock = pygame.time.Clock()
+        self.blocks_plus = blocks_plus
         self.main_loop()
     def main_loop(self, gameExit=False):
         self.gameExit = gameExit
@@ -49,19 +50,21 @@ class Main():
                 """ DATA PROCESSING """
             self.x_pos += self.x_change if abs(self.x_change) <= 10 else 10
             self.y_pos += self.y_change if abs(self.y_change) <= 10 else 10
-            if abs(self.x_pos) <= 0 or abs(self.x_pos) >= 750:
+            if self.x_pos <= -10 or abs(self.x_pos) >= 760:
                 self.lose()
-            if abs(self.y_pos) <= 0 or abs(self.y_pos) >= 600:
+            if self.y_pos <= -10 or abs(self.y_pos) >= 610:
                 self.lose()
             self.display.fill(displayColour)
             """ CHEKING BLOCK'S STATUS """
             if self.x_pos == bl.block_x:
                 if self.y_pos == bl.block_y:
                     del(self.bl_drown)
+                    self.blocks_plus += 1
                     bl.set_pos()
                     self.block_print()
             else:
                 self.block_print()
+
             pygame.draw.rect(self.display, (0,0,0), [self.x_pos, self.y_pos, 10, 10])
 
             pygame.display.update()
@@ -79,3 +82,4 @@ class Main():
 
 bl = Blocks()
 main = Main()
+

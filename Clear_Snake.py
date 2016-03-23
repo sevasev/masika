@@ -6,6 +6,7 @@ class Blocks():
     def __init__(self, block_w=10, block_h=10):
         self.block_w = block_w
         self.block_h = block_h
+<<<<<<< HEAD
         self.block_x = random.randint(0,800)
         self.block_y = random.randint(0,600)
 
@@ -42,3 +43,13 @@ class Main():
 
 block = Blocks()
 main = Main()
+=======
+        
+        print self.block_x, self.block_y
+        
+    def set_position(self):                     # redraw method
+        self.block_x = random.randint(0,800)    #
+        self.block_y = random.randint(0,600)    #
+
+block = Blocks(15,15)
+>>>>>>> 3032b5c8566d96faf0dbfa16da0e13900e7f52b1

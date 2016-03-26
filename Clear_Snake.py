@@ -3,6 +3,13 @@
 import pygame, random, sys
 from pygame import *
 
+block = None
+
+class Data:
+    def __init__(self, last_x = -20, last_y = -20):
+        self.x = last_x
+        self.y = last_y
+
 
 class Blocks:
     def __init__(self, block_w=15, block_h=15):
@@ -15,13 +22,15 @@ class Blocks:
 
 
 class Main:
-    def __init__(self, blocks_plus=0, x_pos=450, y_pos=300):
+    def __init__(self, snake_len=0, blocks_plus=0, x_pos=450, y_pos=300):
         self.x_pos, self.y_pos = x_pos, y_pos
         self.x_change = self.y_change = 0
         self.clock = pygame.time.Clock()
-        self.blocks_plus = blocks_plus
+        self.snake_len = snake_len
         self.main_loop()
     def main_loop(self, gameExit=False):
+        positions = []
+        snake_blocks = []
         self.gameExit = gameExit
         """ ### MAIN LOOP ### """
         pygame.init()
@@ -52,9 +61,9 @@ class Main:
                 """ DATA PROCESSING """
             self.x_pos += self.x_change if abs(self.x_change) <= 15 else 15
             self.y_pos += self.y_change if abs(self.y_change) <= 15 else 15
-            if self.x_pos <= -10 or abs(self.x_pos) >= 760:
+            if self.x_pos <= -15 or abs(self.x_pos) >= 765:
                 self.lose()
-            if self.y_pos <= -10 or abs(self.y_pos) >= 610:
+            if self.y_pos <= -15 or abs(self.y_pos) >= 615:
                 self.lose()
             self.display.fill(displayColour)
             """ CHECKING BLOCK'S STATUS """
@@ -62,21 +71,42 @@ class Main:
             and (self.x_pos+15 >= bl.block_x and self.x_pos+15 <= bl.block_x+bl.block_w))
             and (self.y_pos >= bl.block_y and self.y_pos <= bl.block_y+bl.block_w)
             and (self.y_pos+15 >= bl.block_y and self.y_pos+15 <= bl.block_y+bl.block_w))
-            """ CHECKING ENDS HERE """
+
+            """ MAIN CHECKING BEGINS HERE """
             if check:
                 del(self.bl_drown)
-                self.blocks_plus += 1
                 bl.set_pos()
+                self.snake_len += 1
+                positions = positions[(-2 - self.snake_len):]
                 self.block_print()
             else:
                 self.block_print()
 
             pygame.draw.rect(self.display, (0,0,0), [self.x_pos, self.y_pos, 15, 15])
 
+            """ SNAKE'S LENGTH ADDING """
+            if self.snake_len:
+                for X in range(self.snake_len):
+                    globals()['storage%i' % X] = Data()
+                    snake_blocks.append(globals()['storage%i' % X])
+                    snake_blocks = snake_blocks[-self.snake_len:]
+
+            positions.append([self.x_pos,self.y_pos])
+
+            if snake_blocks:
+                for i in range(len(snake_blocks)):
+                    a = positions[(-2 - i)][0]
+                    b = positions[(-2 - i)][1]
+                    pygame.draw.rect(self.display, (0, 0, 0), [a, b, 15, 15])
+                    if self.x_pos == a:
+                        if self.y_pos == b:
+                            self.lose()
+
+            """ THE LAST PART OF THE MAIN LOOP """
             pygame.display.update()
 
-            self.clock.tick(10)
-
+            self.clock.tick(15)
+    """ OTHER FUNCTIONS """
     def lose(self):
         print("YOU LOSE!")
         self.gameExit = True
@@ -87,3 +117,5 @@ class Main:
 
 bl = Blocks()
 main = Main()
+
+""" ### CLEAR_SNAKE BUILD 1.7 ### """

@@ -1,6 +1,6 @@
 #-*-coding: utf-8-*-
 
-import pygame, random, sys
+import pygame, random
 from pygame import *
 
 

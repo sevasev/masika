@@ -118,4 +118,4 @@ class Main:
 bl = Blocks()
 main = Main()
 
-""" ### CLEAR_SNAKE BUILD 1.7 ### """
+""" ### CLEAR_SNAKE BUILD 1.8 ### """

@@ -13,9 +13,6 @@ class Data:
         self.x = last_x
         self.y = last_y
 
-class File:
-    def __init__(self):
-        self.file_w = open("Scores.txt", 'a')
 
 class Blocks:
     def __init__(self, block_w=15, block_h=15):

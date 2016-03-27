@@ -1,7 +1,9 @@
-#-*-coding: utf-8-*-
+# -*-coding: utf-8-*-
 
-import pygame, random
+import pygame
 from pygame import *
+import random
+import time
 
 block = None
 
@@ -22,7 +24,7 @@ class Blocks:
 
 
 class Main:
-    def __init__(self, snake_len=0, blocks_plus=0, x_pos=450, y_pos=300):
+    def __init__(self, snake_len=0, x_pos=375, y_pos=300):
         self.x_pos, self.y_pos = x_pos, y_pos
         self.x_change = self.y_change = 0
         self.clock = pygame.time.Clock()
@@ -61,11 +63,12 @@ class Main:
                 """ DATA PROCESSING """
             self.x_pos += self.x_change if abs(self.x_change) <= 15 else 15
             self.y_pos += self.y_change if abs(self.y_change) <= 15 else 15
-            if self.x_pos <= -15 or abs(self.x_pos) >= 765:
+            if self.x_pos <= -5 or abs(self.x_pos) >= 740:
                 self.lose()
-            if self.y_pos <= -15 or abs(self.y_pos) >= 615:
+            if self.y_pos <= -5 or abs(self.y_pos) >= 590:
                 self.lose()
             self.display.fill(displayColour)
+
             """ CHECKING BLOCK'S STATUS """
             check = (((self.x_pos >= bl.block_x and self.x_pos <= bl.block_x+bl.block_w)
             and (self.x_pos+15 >= bl.block_x and self.x_pos+15 <= bl.block_x+bl.block_w))
@@ -97,7 +100,7 @@ class Main:
                 for i in range(len(snake_blocks)):
                     a = positions[(-2 - i)][0]
                     b = positions[(-2 - i)][1]
-                    pygame.draw.rect(self.display, (0, 0, 0), [a, b, 15, 15])
+                    pygame.draw.rect(self.display, (0, 255, 0), [a, b, 15, 15])
                     if self.x_pos == a:
                         if self.y_pos == b:
                             self.lose()
@@ -106,16 +109,24 @@ class Main:
             pygame.display.update()
 
             self.clock.tick(15)
+
     """ OTHER FUNCTIONS """
     def lose(self):
-        print("YOU LOSE!")
+        self.text_to_screen("YOU LOSE!", (255,53,35))
+        pygame.display.update()
+        time.sleep(3)
         self.gameExit = True
 
     def block_print(self):
-        self.bl_drown = pygame.draw.rect(self.display, (0,244,15), [bl.block_x, bl.block_y, bl.block_w, bl.block_h])
+        self.bl_drown = pygame.draw.rect(self.display, (245,0,25), [bl.block_x, bl.block_y, bl.block_w, bl.block_h])
+
+    def text_to_screen(self, msg, colour):
+        font = pygame.font.SysFont(None, 100)
+        screen_text = font.render(msg, True, colour)
+        self.display.blit(screen_text, [220, 230])
 
 
 bl = Blocks()
 main = Main()
 
-""" ### CLEAR_SNAKE BUILD 1.8 ### """
+""" ### CLEAR_SNAKE BUILD 2.0 ### """

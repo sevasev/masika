@@ -4,6 +4,7 @@ import pygame
 from pygame import *
 import random
 import time
+import os
 
 block = None
 
@@ -12,6 +13,9 @@ class Data:
         self.x = last_x
         self.y = last_y
 
+class File:
+    def __init__(self):
+        self.file_w = open("Scores.txt", 'a')
 
 class Blocks:
     def __init__(self, block_w=15, block_h=15):
@@ -24,7 +28,8 @@ class Blocks:
 
 
 class Main:
-    def __init__(self, snake_len=0, x_pos=375, y_pos=300):
+    def __init__(self, scores=0, snake_len=0, x_pos=375, y_pos=300):
+        self.scores = scores
         self.x_pos, self.y_pos = x_pos, y_pos
         self.x_change = self.y_change = 0
         self.clock = pygame.time.Clock()
@@ -37,8 +42,8 @@ class Main:
         """ ### MAIN LOOP ### """
         pygame.init()
         self.display = pygame.display.set_mode((750,600))
-        displayColour = (245, 230, 150)
-        pygame.display.set_caption('Fresh Seva')
+        self.displayColour = (245, 230, 150)
+        pygame.display.set_caption('Clear Snake')
         while not self.gameExit:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -67,7 +72,7 @@ class Main:
                 self.lose()
             if self.y_pos <= -5 or abs(self.y_pos) >= 590:
                 self.lose()
-            self.display.fill(displayColour)
+            self.display.fill(self.displayColour)
 
             """ CHECKING BLOCK'S STATUS """
             check = (((self.x_pos >= bl.block_x and self.x_pos <= bl.block_x+bl.block_w)
@@ -80,12 +85,13 @@ class Main:
                 del(self.bl_drown)
                 bl.set_pos()
                 self.snake_len += 1
+                self.scores += 1
                 positions = positions[(-2 - self.snake_len):]
                 self.block_print()
             else:
                 self.block_print()
 
-            pygame.draw.rect(self.display, (0,0,0), [self.x_pos, self.y_pos, 15, 15])
+            self.snake = pygame.draw.rect(self.display, (0,0,0), [self.x_pos, self.y_pos, 15, 15])
 
             """ SNAKE'S LENGTH ADDING """
             if self.snake_len:
@@ -100,7 +106,7 @@ class Main:
                 for i in range(len(snake_blocks)):
                     a = positions[(-2 - i)][0]
                     b = positions[(-2 - i)][1]
-                    pygame.draw.rect(self.display, (0, 255, 0), [a, b, 15, 15])
+                    self.blocks = pygame.draw.rect(self.display, (0, 255, 0), [a, b, 15, 15])
                     if self.x_pos == a:
                         if self.y_pos == b:
                             self.lose()
@@ -112,21 +118,45 @@ class Main:
 
     """ OTHER FUNCTIONS """
     def lose(self):
-        self.text_to_screen("YOU LOSE!", (255,53,35))
+        self.new_file()
+        self.file.write(str(self.scores) + '\n')
+        self.file.close()
+        self.best_score()
+        self.display.fill(self.displayColour)
+        self.text_to_screen("GAME OVER", (255,53,35))
         pygame.display.update()
-        time.sleep(3)
+        time.sleep(5)
         self.gameExit = True
 
     def block_print(self):
         self.bl_drown = pygame.draw.rect(self.display, (245,0,25), [bl.block_x, bl.block_y, bl.block_w, bl.block_h])
 
     def text_to_screen(self, msg, colour):
-        font = pygame.font.SysFont(None, 100)
-        screen_text = font.render(msg, True, colour)
-        self.display.blit(screen_text, [220, 230])
+        fontB = pygame.font.SysFont(None, 100)
+        fontS = pygame.font.SysFont(None, 60)
+        you_lose = fontB.render(msg, True, colour)
+        q_score = fontS.render("You scored: " + str(self.scores), True, colour)
+        best_score = fontS.render("Best score: " + str(self.best_res), True, colour)
+        self.display.blit(you_lose, [170, 230])
+        self.display.blit(q_score, [230, 310])
+        self.display.blit(best_score, [234, 350])
 
+    def best_score(self):
+        res = []
+        file = open('Scores.txt', 'r')
+        resList = file.readlines()
+        for i in resList:
+            res.append(int(i))
+        self.best_res = max(res) if max(res) >= self.scores else self.scores
+        file.close()
 
+    def new_file(self):
+        q_path = os.getcwd()
+        os.chdir(q_path)
+        self.file = open('Scores.txt', 'a')
+
+f = File()
 bl = Blocks()
 main = Main()
 
-""" ### CLEAR_SNAKE BUILD 2.0 ### """
+""" ### CLEAR_SNAKE BUILD 2.7 ### """

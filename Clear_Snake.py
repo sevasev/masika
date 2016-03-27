@@ -25,12 +25,13 @@ class Blocks:
 
 
 class Main:
-    def __init__(self, scores=0, snake_len=0, x_pos=375, y_pos=300):
+    def __init__(self, egg='',scores=0, snake_len=0, x_pos=375, y_pos=300):
         self.scores = scores
         self.x_pos, self.y_pos = x_pos, y_pos
         self.x_change = self.y_change = 0
         self.clock = pygame.time.Clock()
         self.snake_len = snake_len
+        self.egg = egg
         self.main_loop()
     def main_loop(self, gameExit=False):
         positions = []
@@ -45,6 +46,9 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.gameExit = True
+                if self.egg == 'seva':
+                            self.egg = ''
+                            self.easter_egg()
                 """ SAVING FROM AN ERROR + MAIN ENGINE'S HERE """
                 try:
                     if event.type == pygame.KEYDOWN:
@@ -59,8 +63,14 @@ class Main:
                             self.y_change = y_keys[event.key]
                             self.x_change = 0
                 except:
-                    print("An Error Occurs!")
-                    self.gameExit = True
+                    if event.key == 115:
+                        self.egg += 's'
+                    if event.key == 101:
+                        self.egg += 'e'
+                    if event.key == 118:
+                        self.egg += 'v'
+                    if event.key == 97:
+                        self.egg += 'a'
 
                 """ DATA PROCESSING """
             self.x_pos += self.x_change if abs(self.x_change) <= 15 else 15
@@ -103,7 +113,7 @@ class Main:
                 for i in range(len(snake_blocks)):
                     a = positions[(-2 - i)][0]
                     b = positions[(-2 - i)][1]
-                    self.blocks = pygame.draw.rect(self.display, (0, 255, 0), [a, b, 15, 15])
+                    self.blocks = pygame.draw.rect(self.display, (245,0,25), [a, b, 15, 15])
                     if self.x_pos == a:
                         if self.y_pos == b:
                             self.lose()
@@ -120,7 +130,7 @@ class Main:
         self.file.close()
         self.best_score()
         self.display.fill(self.displayColour)
-        self.text_to_screen("GAME OVER", (255,53,35))
+        self.text_to_screen("GAME OVER", (255,0,0))
         pygame.display.update()
         time.sleep(5)
         self.gameExit = True
@@ -152,7 +162,25 @@ class Main:
         os.chdir(q_path)
         self.file = open('Scores.txt', 'a')
 
+    def easter_egg(self):
+        self.snake_len += 25
+        font = pygame.font.SysFont(None, 35)
+        pascal = font.render("Cheat activated", True, (0,15,240))
+        self.display.blit(pascal, [234, 350])
+        pygame.display.update()
+        time.sleep(1)
+
+
 bl = Blocks()
 main = Main()
+pygame.quit()
 
-""" ### CLEAR_SNAKE BUILD 2.7 ### """
+""" ### CLEAR_SNAKE BUILD 2.9 ### """
+
+"""
+WHAT TO DO:
+        1. Experement with Snake's colour
+        2. Try to delete the snake's parts and a block at the end
+        3. Do the impossibility of the 'back' movement
+"""
+

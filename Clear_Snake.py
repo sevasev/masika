@@ -152,7 +152,6 @@ class Main:
         os.chdir(q_path)
         self.file = open('Scores.txt', 'a')
 
-f = File()
 bl = Blocks()
 main = Main()
 

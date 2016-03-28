@@ -9,7 +9,7 @@ import os
 block = None
 
 class Data:
-    def __init__(self, last_x = -20, last_y = -20):
+    def __init__(self, last_x=-20, last_y=-20):
         self.x = last_x
         self.y = last_y
 
@@ -25,13 +25,12 @@ class Blocks:
 
 
 class Main:
-    def __init__(self, egg='',scores=0, snake_len=0, x_pos=375, y_pos=300):
+    def __init__(self,scores=0, snake_len=0, x_pos=375, y_pos=300):
         self.scores = scores
         self.x_pos, self.y_pos = x_pos, y_pos
         self.x_change = self.y_change = 0
         self.clock = pygame.time.Clock()
         self.snake_len = snake_len
-        self.egg = egg
         self.main_loop()
     def main_loop(self, gameExit=False):
         positions = []
@@ -46,9 +45,6 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.gameExit = True
-                if self.egg == 'seva':
-                            self.egg = ''
-                            self.easter_egg()
                 """ SAVING FROM AN ERROR + MAIN ENGINE'S HERE """
                 try:
                     if event.type == pygame.KEYDOWN:
@@ -60,25 +56,21 @@ class Main:
                         except:
                             y_keys = {274: 15,
                                         273: -15}
-                            self.y_change = y_keys[event.key]
-                            self.x_change = 0
+                            self.y_change = y_keys[event.key] if self.y_change == 0 else self.y_change
+                            self.x_change = 0 if self.y_change else self.x_change
                 except:
-                    if event.key == 115:
-                        self.egg += 's'
-                    if event.key == 101:
-                        self.egg += 'e'
-                    if event.key == 118:
-                        self.egg += 'v'
-                    if event.key == 97:
-                        self.egg += 'a'
+                    pass
 
                 """ DATA PROCESSING """
             self.x_pos += self.x_change if abs(self.x_change) <= 15 else 15
             self.y_pos += self.y_change if abs(self.y_change) <= 15 else 15
-            if self.x_pos <= -5 or abs(self.x_pos) >= 740:
-                self.lose()
-            if self.y_pos <= -5 or abs(self.y_pos) >= 590:
-                self.lose()
+
+            if self.x_pos <= -5: self.x_pos = 750
+            elif self.x_pos >= 750: self.x_pos = 0
+
+            if self.y_pos <= -5: self.y_pos = 600
+            elif self.y_pos >= 600: self.y_pos = 0
+
             self.display.fill(self.displayColour)
 
             """ CHECKING BLOCK'S STATUS """
@@ -132,7 +124,7 @@ class Main:
         self.display.fill(self.displayColour)
         self.text_to_screen("GAME OVER", (255,0,0))
         pygame.display.update()
-        time.sleep(5)
+        time.sleep(3)
         self.gameExit = True
 
     def block_print(self):
@@ -162,25 +154,17 @@ class Main:
         os.chdir(q_path)
         self.file = open('Scores.txt', 'a')
 
-    def easter_egg(self):
-        self.snake_len += 25
-        font = pygame.font.SysFont(None, 35)
-        pascal = font.render("Cheat activated", True, (0,15,240))
-        self.display.blit(pascal, [234, 350])
-        pygame.display.update()
-        time.sleep(1)
-
 
 bl = Blocks()
 main = Main()
 pygame.quit()
 
-""" ### CLEAR_SNAKE BUILD 2.9 ### """
+""" ### CLEAR_SNAKE BUILD 2.8 ### """
 
 """
 WHAT TO DO:
-        1. Experement with Snake's colour
+        1. Experement with Snake's colour --DONE
         2. Try to delete the snake's parts and a block at the end
         3. Do the impossibility of the 'back' movement
+        4. To move through walls --DONE
 """
-

@@ -46,22 +46,28 @@ class Main:
                 if event.type == pygame.QUIT:
                     self.gameExit = True
                 """ SAVING FROM AN ERROR + MAIN ENGINE'S HERE """
-                try:
-                    if event.type == pygame.KEYDOWN:
+                x_keys = {276: -15, 275: 15}
+                y_keys = {274: 15, 273: -15}
+                if event.type == pygame.KEYDOWN:
+                    if self.x_change == self.y_change:
                         try:
-                            x_keys = {276: -15,
-                                        275: 15}
                             self.x_change = x_keys[event.key]
                             self.y_change = 0
                         except:
-                            y_keys = {274: 15,
-                                        273: -15}
-                            self.y_change = y_keys[event.key] if self.y_change == 0 else self.y_change
-                            self.x_change = 0 if self.y_change else self.x_change
+                            self.y_change = y_keys[event.key]
+                            self.x_change = 0
+                try:
+                    if event.type == pygame.KEYDOWN:
+                        if self.x_change == 0:
+                            self.x_change = x_keys[event.key]
+                            self.y_change = 0
+                        if self.y_change == 0:
+                            self.y_change = y_keys[event.key]
+                            self.x_change = 0
                 except:
                     pass
 
-                """ DATA PROCESSING """
+            """ DATA PROCESSING """
             self.x_pos += self.x_change if abs(self.x_change) <= 15 else 15
             self.y_pos += self.y_change if abs(self.y_change) <= 15 else 15
 
@@ -76,8 +82,8 @@ class Main:
             """ CHECKING BLOCK'S STATUS """
             check = (((self.x_pos >= bl.block_x and self.x_pos <= bl.block_x+bl.block_w)
             and (self.x_pos+15 >= bl.block_x and self.x_pos+15 <= bl.block_x+bl.block_w))
-            and (self.y_pos >= bl.block_y and self.y_pos <= bl.block_y+bl.block_w)
-            and (self.y_pos+15 >= bl.block_y and self.y_pos+15 <= bl.block_y+bl.block_w))
+            and ((self.y_pos >= bl.block_y and self.y_pos <= bl.block_y+bl.block_w)
+            and (self.y_pos+15 >= bl.block_y and self.y_pos+15 <= bl.block_y+bl.block_w)))
 
             """ MAIN CHECKING BEGINS HERE """
             if check:
@@ -113,7 +119,7 @@ class Main:
             """ THE LAST PART OF THE MAIN LOOP """
             pygame.display.update()
 
-            self.clock.tick(15)
+            self.clock.tick(20)
 
     """ OTHER FUNCTIONS """
     def lose(self):
@@ -125,6 +131,7 @@ class Main:
         self.text_to_screen("GAME OVER", (255,0,0))
         pygame.display.update()
         time.sleep(3)
+        bl = None
         self.gameExit = True
 
     def block_print(self):
@@ -159,12 +166,12 @@ bl = Blocks()
 main = Main()
 pygame.quit()
 
-""" ### CLEAR_SNAKE BUILD 2.8 ### """
+""" ### CLEAR_SNAKE BUILD ALPHA 2.8 ### """
 
 """
 WHAT TO DO:
         1. Experement with Snake's colour --DONE
-        2. Try to delete the snake's parts and a block at the end
-        3. Do the impossibility of the 'back' movement
+        2. Try to delete the snake's parts and a block at the end --DONE
+        3. Do the impossibility of the 'back' movement --!!!
         4. To move through walls --DONE
 """

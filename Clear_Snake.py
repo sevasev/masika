@@ -172,6 +172,6 @@ pygame.quit()
 WHAT TO DO:
         1. Experement with Snake's colour --DONE
         2. Try to delete the snake's parts and a block at the end --DONE
-        3. Do the impossibility of the 'back' movement --!!!
+        3. Do the impossibility of the 'back' movement --DONE
         4. To move through walls --DONE
 """

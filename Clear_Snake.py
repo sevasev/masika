@@ -34,7 +34,7 @@ class Main:
         self.main_loop()
     def main_loop(self, gameExit=False):
         positions = []
-        snake_blocks = []
+        self.snake_blocks = []
         self.gameExit = gameExit
         """ ### MAIN LOOP ### """
         pygame.init()
@@ -102,13 +102,13 @@ class Main:
             if self.snake_len:
                 for X in range(self.snake_len):
                     globals()['storage%i' % X] = Data()
-                    snake_blocks.append(globals()['storage%i' % X])
-                    snake_blocks = snake_blocks[-self.snake_len:]
+                    self.snake_blocks.append(globals()['storage%i' % X])
+                    self.snake_blocks = self.snake_blocks[-self.snake_len:]
 
             positions.append([self.x_pos,self.y_pos])
 
-            if snake_blocks:
-                for i in range(len(snake_blocks)):
+            if self.snake_blocks:
+                for i in range(len(self.snake_blocks)):
                     a = positions[(-2 - i)][0]
                     b = positions[(-2 - i)][1]
                     self.blocks = pygame.draw.rect(self.display, (245,0,25), [a, b, 15, 15])
@@ -119,7 +119,7 @@ class Main:
             """ THE LAST PART OF THE MAIN LOOP """
             pygame.display.update()
 
-            self.clock.tick(20)
+            self.clock.tick(15)
 
     """ OTHER FUNCTIONS """
     def lose(self):
@@ -131,7 +131,7 @@ class Main:
         self.text_to_screen("GAME OVER", (255,0,0))
         pygame.display.update()
         time.sleep(3)
-        bl = None
+        bl.block_x = bl.block_y = 99999
         self.gameExit = True
 
     def block_print(self):
@@ -166,12 +166,12 @@ bl = Blocks()
 main = Main()
 pygame.quit()
 
-""" ### CLEAR_SNAKE BUILD ALPHA 2.8 ### """
+""" ### CLEAR_SNAKE BUILD ALPHA 3.0 ### """
 
 """
 WHAT TO DO:
-        1. Experement with Snake's colour --DONE
-        2. Try to delete the snake's parts and a block at the end --DONE
-        3. Do the impossibility of the 'back' movement --DONE
+        1. Experiment with Snake's colour --DONE
+        2. Try to delete the snake's parts and a block at the end --!!!
+        3. Do the impossibility of the 'back' movement --DONE ~so-so
         4. To move through walls --DONE
 """

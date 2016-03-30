@@ -1,0 +1,44 @@
+import pygame as py
+import random
+
+
+class Block:
+    def __init__(self, w=10, h=10):
+        self.w = w
+        self.h = h
+        self.draw()
+    def draw(self):
+        level = ["------  ------------   ------------- -"
+                 "---  -------------   -----------------"
+                 "--------- ----------------      ------"
+                 "--------------   -------------  ------"
+                 "------       -------------------  ----"
+                 "---  ------   -----------   ----------"]
+        for row in level:
+            for symbol in row:
+                if symbol == '-':
+                    self.block = py.Surface((self.w, self.h))
+                    self.block.fill((139,56,20))
+
+
+class Base:
+    def __init__(self,x=0,y=0):
+        self.x = x
+        self.y = y
+        self.main()
+    def main(self, Play=True):
+        while Play:
+            py.init()
+            self.window = py.display.set_mode((1260, 750))
+            py.display.set_caption('Psyho Masya')
+            bgColour = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
+            self.window.fill(bgColour)
+            py.display.update()
+            for event in py.event.get():
+                if event.type == py.QUIT:
+                    Play = False
+
+
+base = Base()
+b = Block()
+py.quit()

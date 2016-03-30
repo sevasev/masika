@@ -3,11 +3,13 @@ import random
 
 
 class Block:
-    def __init__(self, w=10, h=10):
+    def __init__(self, w=100, h=100):
         self.w = w
         self.h = h
+        self.x = self.y = 0
         self.draw()
     def draw(self):
+        self.block_colour = (139,56,20)
         level = ["------  ------------   ------------- -"
                  "---  -------------   -----------------"
                  "--------- ----------------      ------"
@@ -18,7 +20,8 @@ class Block:
             for symbol in row:
                 if symbol == '-':
                     self.block = py.Surface((self.w, self.h))
-                    self.block.fill((139,56,20))
+                    self.block.fill(self.block_colour)
+                    base.window.blit(self.block, [self.x,self.y])
 
 
 class Base:
@@ -27,12 +30,13 @@ class Base:
         self.y = y
         self.main()
     def main(self, Play=True):
+        py.init()
+        self.window = py.display.set_mode((1260, 750))
+        py.display.set_caption('Psyho Masya')
         while Play:
-            py.init()
-            self.window = py.display.set_mode((1260, 750))
-            py.display.set_caption('Psyho Masya')
             bgColour = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
             self.window.fill(bgColour)
+            b.draw()
             py.display.update()
             for event in py.event.get():
                 if event.type == py.QUIT:
